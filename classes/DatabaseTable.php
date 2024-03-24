@@ -24,16 +24,17 @@ class DatabaseTable
         return $row[0];
     }
 
-    public function findById($value) {
-        $query = 'SELECT * FROM `' . $this->table . '` WHERE `' . $this->primaryKey . '` = :value';
+    public function find($field, $value) {
+        $query = 'SELECT * FROM `' . $this->table . '` WHERE `' . $field . '` = :value';
 
-        $parameters = [
+        $values = [
             'value' => $value
         ];
 
-        $query = query($query, $parameters);
-
-        return $query->fetch();
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($values);
+     
+        return $stmt->fetchAll();
     }
 
     private function insert($fields) {
